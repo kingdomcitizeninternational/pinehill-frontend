@@ -5,10 +5,7 @@ import { getCurrencyByCountry } from '../utils/currencyUtils';
 // Create Currency Context
 const CurrencyContext = createContext();
 
-/**
- * Currency Provider Component
- * Provides currency information throughout the app based on user's country
- */
+
 export const CurrencyProvider = ({ children }) => {
   const { user } = useSelector(state => state.userAuth);
   
