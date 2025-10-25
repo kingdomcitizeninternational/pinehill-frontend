@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <base href="/" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <title>PHCU - Smart Banking Solution</title>
+
+  <!-- PWA Primary Meta Tags -->
+  <meta name="title" content="PHCU - Smart Banking Solution">
+  <meta name="description" content="Your comprehensive banking solution for the modern world. Bank smarter with PHCU - Easy account management in minutes.">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="msapplication-TileColor" content="#2563eb">
+  <meta name="msapplication-config" content="browserconfig.xml">
+  
+  <!-- Apple Touch Icons -->
+  <link rel="apple-touch-icon" sizes="72x72" href="icons/icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="96x96" href="icons/icon-96x96.png">
+  <link rel="apple-touch-icon" sizes="128x128" href="icons/icon-128x128.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="icons/icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192x192.png">
+  <link rel="apple-touch-icon" sizes="384x384" href="icons/icon-384x384.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512x512.png">
+  
+  <!-- iOS Safari Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PHCU">
+  
+  <!-- Android Chrome Meta Tags -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="PHCU">
+  
+  <!-- Windows Metro Tiles -->
+  <meta name="msapplication-TileImage" content="icons/icon-144x144.png">
+  <meta name="msapplication-square70x70logo" content="icons/icon-72x72.png">
+  <meta name="msapplication-square150x150logo" content="icons/icon-152x152.png">
+  <meta name="msapplication-wide310x150logo" content="icons/icon-384x384.png">
+  <meta name="msapplication-square310x310logo" content="icons/icon-512x512.png">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="front/img/favicon.png">
+  <link rel="shortcut icon" href="icons/icon-72x72.png">
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+<!-- Begin of Chaport Live Chat code -->
+
+
+<script>
+(function() {
+    var s = document.createElement('script');
+    s.src = 'https://code.jivosite.com/widget/7SKjnhoL0S';
+    s.async = true;
+    s.onload = function() {
+        console.log('JivoSite widget loaded successfully.');
+    };
+    s.onerror = function() {
+        console.error('Failed to load JivoSite widget.');
+    };
+    document.addEventListener("DOMContentLoaded", function() {
+        document.body.appendChild(s);
+    });
+})();
+</script>
+</head>
+
+<body>
+  
+  <!-- Material Icons (Classic + Symbols) -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp" rel="stylesheet">
+
+  <div id="root"></div>
+  <!-- Links of JS files -->
+
+
+<!-- PWA Service Worker Registration -->
+<script>
+  // Service Worker Registration
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js')
+        .then(function(registration) {
+          console.log('PHCU SW registered successfully:', registration.scope);
+          
+          // Check for updates
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed') {
+                if (navigator.serviceWorker.controller) {
+                  // New update available
+                  console.log('New PHCU update available!');
+                  // You can show a notification to the user here
+                } else {
+                  // App is cached for first time
+                  console.log('PHCU is now available offline!');
+                }
+              }
+            });
+          });
+        })
+        .catch(function(error) {
+          console.log('PHCU SW registration failed:', error);
+        });
+    });
+  }
+
+  // PWA Install Banner
+  let deferredPrompt;
+  let installButton = null;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    console.log('PHCU install prompt available');
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    // Create and show install button if not already shown
+    if (!installButton && !localStorage.getItem('pwa-dismissed')) {
+      createInstallBanner();
+    }
+  });
+
+  window.addEventListener('appinstalled', (evt) => {
+    console.log('PHCU has been installed');
+    hideInstallBanner();
+    localStorage.setItem('pwa-installed', 'true');
+  });
+
+  function createInstallBanner() {
+    const banner = document.createElement('div');
+    banner.id = 'pwa-install-banner';
+    banner.innerHTML = `
+      <div style="
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: white;
+        padding: 16px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: Arial, sans-serif;
+        animation: slideUp 0.5s ease-out;
+      ">
+        <div style="display: flex; align-items: center;">
+          <div style="margin-right: 12px; font-size: 24px;">📱</div>
+          <div>
+            <div style="font-weight: bold; margin-bottom: 4px;">Install PHCU</div>
+            <div style="font-size: 14px; opacity: 0.9;">Get the full app experience</div>
+          </div>
+        </div>
+        <div>
+          <button id="pwa-install-btn" style="
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            margin-right: 8px;
+            cursor: pointer;
+            font-weight: bold;
+          ">Install</button>
+          <button id="pwa-dismiss-btn" style="
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            opacity: 0.7;
+          ">×</button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(banner);
+    installButton = banner;
+    
+    // Add event listeners
+    document.getElementById('pwa-install-btn').addEventListener('click', installPWA);
+    document.getElementById('pwa-dismiss-btn').addEventListener('click', dismissInstallBanner);
+  }
+
+  function installPWA() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the PHCU install prompt');
+        } else {
+          console.log('User dismissed the PHCU install prompt');
+        }
+        deferredPrompt = null;
+        hideInstallBanner();
+      });
+    }
+  }
+
+  function dismissInstallBanner() {
+    localStorage.setItem('pwa-dismissed', Date.now());
+    hideInstallBanner();
+  }
+
+  function hideInstallBanner() {
+    if (installButton) {
+      installButton.remove();
+      installButton = null;
+    }
+  }
+
+  // Add slide up animation
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,67 @@
+.favoriteListCard {
+  background-color: rgba(0,0,0,0.8);
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* perfect vertical centering */
+}
+
+.favoriteCard {
+  width: 340px;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+.favoriteCard .body {
+  padding: 28px 22px;
+  text-align: center;
+}
+
+.favoriteCard h4 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #222;
+}
+
+.favoriteCard p {
+  color: #4a4a4a;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.favoriteCard button {
+  background: var(--primary, #ee0979); /* keep your brand */
+  color: #fff;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.favoriteCard button:hover {
+  background: #ee0979; /* slightly darker hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+@media screen and (max-width: 480px) {
+  .favoriteCard {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 300px) {
+  .favoriteCard {
+    width: 95%;
+  }
+}

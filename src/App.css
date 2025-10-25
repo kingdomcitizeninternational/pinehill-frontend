@@ -1,0 +1,168 @@
+/*ABeeZee font import stays here*/
+@import url('https://fonts.googleapis.com/css2?family=ABeeZee&display=swap');
+::placeholder {
+  font-size: 1rem;
+  padding-left: 10px;
+  text-align: left;
+  width:100%;
+  color:rgb(134, 134, 134);
+}
+
+
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active{
+  -webkit-box-shadow:0 0 0 30px white inset !important
+}
+
+
+.loaders {
+  background-color: rgb(255, 235, 235);
+  width:130px;
+  height:130px;
+  border-radius:120%;
+  animation: load infinite 3s linear;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.loader-inner{
+  width:90px;
+  height:90px;
+  background-color: rgb(255, 220, 220);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius:100%;
+}
+
+.loader-inner-inner{
+  width:60px;
+  height:60px;
+  background-color: #ee0979;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius:100%;
+  
+}
+
+
+.loaders span{
+  color:#fff;
+  font-size: 1.5rem;
+}
+
+@keyframes load {
+
+  0% {
+    width:60px;
+    height:60px; border-radius:100%;
+  }
+
+  10% {
+    width:80px;
+    height:80px; border-radius:100%;
+  }
+
+  20% {
+    width:100px;
+    height:100px; border-radius:100%;
+  }
+
+  30% {
+    width:120px;
+    height:120px; border-radius:100%;
+  }
+
+  40% {
+    width:135px;
+    height:135px; border-radius:100%;
+  }
+
+  50% {
+    width:140px;
+    height:140px; border-radius:100%;
+  }
+
+  60% {
+    width:135px;
+    height:135px; border-radius:100%;
+  }
+
+  70% {
+    width: 120px;
+    height:120px; border-radius:100%;
+  }
+
+  80% {
+    width:100px;
+    height:100px; border-radius:100%;
+  }
+
+  90% {
+    width:80px;
+    height:80px; border-radius:100%;
+  }
+
+  100% {
+    width:60px;
+    height:60px; border-radius:100%;
+  }
+
+
+
+}
+
+
+
+:root {
+  color-scheme: light;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+}
+
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active{
+  -webkit-box-shadow:0 0 0 30px white inset !important
+}
+input{
+  background-color: transparent;
+
+}
+
+button {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  outline: none;
+  box-shadow: none;
+}
+
+
+
+
+p,div,h1,h2.h3,h4,h5,h6,button,span,input,select{
+  font-family: 'ABeeZee';
+ 
+}

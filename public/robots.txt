@@ -1,0 +1,15 @@
+# PHCU - Smart Banking Solution
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# Disallow sensitive areas
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /settings
+Disallow: /transfer
+Disallow: /transaction-history
+Disallow: /api/
+Disallow: /admin/

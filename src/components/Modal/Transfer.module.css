@@ -1,0 +1,112 @@
+
+.favoriteListCard{
+    background-color: rgba(0,0,0,0.2);
+    width:100vw;
+    height:100vh;
+    position: absolute;
+    top:0px;
+    right:0px;
+    left:0px;
+    bottom: 0px;
+    z-index: 60;
+    overflow-y: scroll;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 100px;
+    background-color: rgba(0, 0, 0,0.8);
+    
+}
+
+.favoriteCard{
+    width:320px;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+
+
+.favoriteCard  .headsection{
+    background-color: #ee0979;
+    color: #fff;
+    padding: 5px;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.favoriteCard  .headsection h3{
+   
+    font-size: 1.3rem;
+}
+
+.favoriteCard div.body{
+    padding: 15px;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+
+div.body p{
+    color: rgb(74, 74, 74);
+    font-size: 1rem;
+    text-align: left;
+}
+
+
+.body h4{
+    color:rgb(106, 106, 106);
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+
+.transferbutton{
+    margin-bottom: 20px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: #ee0979;
+    font-size: .9rem;
+}
+
+.transferbutton:active { 
+    transform: scale(0.98); 
+    /* Scaling button to 0.98 to its original size */ 
+    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24); 
+    /* Lowering the shadow */ 
+    opacity: 0.8;
+} 
+
+.transferbutton:nth-of-type(1){
+    background-color: rgb(255, 241, 241);
+    color:#ee0979;
+}
+
+
+
+
+ @media screen and (max-width: 480px) {
+    .favoriteCard{
+        width:90%;
+    }
+    
+
+
+
+ }
+
+ @media screen and (max-width: 300px) {
+    .favoriteCard{
+        width:98%;
+    }
+
+
+
+
+ }

@@ -1,0 +1,98 @@
+
+.favoriteListCard{
+    background-color: rgba(0,0,0,0.2);
+    width:100vw;
+    height:100vh;
+    position: absolute;
+    top:0px;
+    right:0px;
+    left:0px;
+    bottom: 0px;
+    z-index: 60;
+    overflow-y: scroll;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0,0.8);
+    
+}
+
+.favoriteCard{
+    width:320px;
+    background-color: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    padding-bottom: 5px;
+}
+
+.favoriteCard h5{
+    text-align: center;
+}
+
+
+
+
+
+
+.favoriteCard div.body{
+    padding: 5px;
+    width: 100%;
+}
+
+
+
+div.body p{
+    font-size: .9rem;
+    margin:0px;
+    color:rgb(75, 75, 75);
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 400;
+} 
+
+
+button{
+    width:100%;
+    padding-top:10px;
+    padding-bottom: 10px;
+    border: none;
+    color: #fff;
+    background-color: #ee0979;
+    border-radius: 20px;
+}
+
+
+
+.loaderContainer{
+    height:150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+
+
+ @media screen and (max-width: 480px) {
+    .favoriteCard{
+        width:85%;
+    }
+    
+
+
+
+}
+
+ @media screen and (max-width: 300px) {
+    .favoriteCard{
+        width:98%;
+    }
+
+   
+
+
+
+ }

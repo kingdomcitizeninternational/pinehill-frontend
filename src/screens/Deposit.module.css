@@ -1,0 +1,362 @@
+.screenContainer {
+    display: flex;
+    height: 100vh;
+    background-color: rgb(253, 253, 253);
+   
+}
+
+/*  end of styling the sidebar */
+.screenContainer .maindashboard {
+    width: 83%;
+     
+}
+
+/* styling the dashboard section */
+
+.mainscreen {
+    display: flex;
+    flex-direction: column;
+    padding-left: 30px;
+}
+
+.mainscreenleft {
+    width: 60%;
+}
+
+
+.helpCard{
+    width:100%;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    margin-top: 10px;
+    background-color: #fff;
+}
+
+
+.header{
+    width:100%;
+    background-color: #ee0979;
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.header h4{
+    color:#fff;
+    font-size: 1.1rem;
+}
+
+.header span{
+    font-size: 1rem;
+    padding: 3px;
+    border-radius: 100%;
+    color: #fff;
+    background-color: orange;
+    cursor: pointer;
+}
+
+.body{
+    padding:20px;
+    overflow-x: scroll;
+}
+
+
+table{
+    width:1500px;
+}
+table tr{
+    margin-bottom: 20px;
+}
+
+table th{
+   font-size: 1.1rem;
+   padding-top: 10px;
+    padding-bottom: 10px;
+    font-weight: 600;
+}
+
+
+table td{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+
+.status{
+    color:#ff0000
+}
+
+.pay{
+    width:60px;
+    color: #ee0979;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+
+
+
+
+
+
+
+
+.screenContainer .maindashboard {
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+
+
+
+
+.mainscreenright {
+    width: 60%;
+    padding: 10px;
+    margin-bottom: 40px;
+
+}
+
+.form{
+    width:100%;
+    background-color: #ffffff;
+    display: inline-block;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(136, 136, 136, 0.1);
+    overflow: hidden;
+    margin-top: 30px;
+    padding: 15px;
+}
+
+
+
+.form .formbody{
+    padding:10px
+}
+
+.options{
+    display:flex;
+    justify-content: space-between;
+
+}
+.options p{
+    font-size: 1rem;
+    font-family: ABeeZee;
+    color: rgb(70, 70, 70);
+    cursor: pointer;
+
+}
+
+.form input,.form button,.form select{
+    width: 100%;
+    height:50px;
+    background-color: rgb(247, 247, 247);
+    border-radius: 30px;
+    border: none;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    padding:10px;
+
+}
+
+.form button{
+    background-color: #ee0979;
+    color: #fff;
+    font-size: 1rem;
+    font-family: ABeeZee;
+}
+
+/*styling the favorite list card */
+.addToFavorite{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+.addToFavorite p{
+    margin: 0px;
+}
+
+.addToFavorite input{
+    width:20px;
+    height:20px;
+    margin-right: 10px;
+    margin: 0px;
+    margin-right: 10px;
+}
+
+.form h6{
+    margin-bottom: 30px;
+    font-family: ABeeZee;
+}
+
+
+/* small laptop screens */
+@media screen and (max-width:1024px) {}
+
+/* ipad screens */
+
+@media screen and (max-width:768px) {
+
+
+    .mainscreen {
+        display: flex;
+        flex-direction: column;
+       padding:30px;
+       padding-bottom: 0px;
+    }
+    
+    .screenContainer .maindashboard {
+        width: 78%;
+    }
+
+
+
+
+    .mainscreenleft {
+        width: 100%;
+    }
+
+    .mainscreenright {
+        width: 100%;
+
+    }
+
+   
+
+
+  
+
+
+
+  
+
+
+
+}
+
+
+/* mobile screen*/
+
+@media screen and (max-width: 480px) {
+    
+
+
+
+
+
+
+    .screenContainer .maindashboard {
+        width: 100%;
+    }
+
+    /* dashboard */
+    .screenContainer .maindashboard {
+        height: 90vh;
+        overflow-y: scroll;
+    }
+  
+
+
+}
+
+
+@media screen and (max-width: 300px) {
+
+    .options p{
+        font-size: .8rem;
+    }
+
+
+
+}
+
+.pageTitle {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.walletGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.walletCard {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  text-align: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.walletCard:hover {
+  transform: translateY(-3px);
+}
+
+.walletCard h4 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: #ee0979;
+}
+
+.qrImage {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 15px auto;
+  display: block;
+}
+
+.walletRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f4f4f4;
+  border-radius: 8px;
+  padding: 8px 12px;
+  overflow: hidden;
+}
+
+.addressText {
+  flex: 1;
+  font-size: 0.9rem;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 10px;
+}
+
+.copyBtn {
+  background: #ee0979;
+  border: none;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.copyBtn:hover {
+  background: #d63b47;
+}
+
+.instruction {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 25px;
+  line-height: 1.5;
+  background: #fff3f3;
+  border-left: 4px solid #ee0979;
+  padding: 12px 15px;
+  border-radius: 8px;
+}
