@@ -37,8 +37,6 @@ function EmailVerification() {
 
 
 
-
-
     //this handler check if user email has been verified
     const verifyingEmail = async () => {
         let res = await dispatch(verifying(id))
@@ -61,15 +59,10 @@ function EmailVerification() {
 
 
 
-
-
-
     return (<>
 
         {isLoading && <LoadingModal />}
         {isError && <Modal content={isErrorInfo} closeModal={closeModal} />}
-
-
 
         <div className={styles.screenContainer}>
             <div className={styles.innerContainer}>
@@ -77,11 +70,7 @@ function EmailVerification() {
                 <div className={styles.spinnerContainer}>
                     <p>{isErrorInfo}</p>
                 </div>
-
             </div>
-
-
-
         </div>
 
 
