@@ -26,6 +26,10 @@ function RegisterationPage() {
     let [userCountry, setUserCountry] = useState('')
     let [userCountryError, setUserCountryError] = useState('')
 
+
+     let [userPin, setUserPin] = useState('')
+    let [userPinError, setUserPinError] = useState('')
+
     let [userState, setUserState] = useState('')
     let [userStateError, setUserStateError] = useState('')
 
@@ -54,7 +58,7 @@ function RegisterationPage() {
         }, 5000)
     }, [])
 
-    let formValid = !userNidError && !userCountryError && !userStateError && !userAddressError
+    let formValid = !userNidError && !userCountryError && !userStateError && !userAddressError  && !userPinError
 
     const submitHandler = async (e) => {
         e.preventDefault()
@@ -102,7 +106,8 @@ function RegisterationPage() {
             country: userCountry,
             state: userState,
             address: userAddress,
-            passportUrl:imgUrl
+            passportUrl:imgUrl,
+            pin:userPin
         }))
 
 
@@ -155,6 +160,11 @@ function RegisterationPage() {
             let formValue = e.value
             setUserAddress(formValue)
             setUserAddressError(e.error)
+            return
+        }else if (e.formName === "userPin") {
+            let formValue = e.value
+            setUserPin(formValue)
+            setUserPinError(e.error)
             return
         }
     }, [])
@@ -638,10 +648,26 @@ function RegisterationPage() {
 
                         </div>
 
+                        <p>Create transfer pin</p>
+
+
+                        <div className={styles.formCard}>
+                            <FormInput
+                                icon='edit'
+                                type='text'
+                                types="text"
+                                className="formcard"
+                                formName="userPin"
+                                placeholder='Enter New Transfeer Pin'
+                                setFormDetails={setFormDetails}
+                            />
+
+                        </div>
+
                     </div>
 
                     <div className={styles.submit}>
-                        <SubmitBtn style={{ borderRadius: '20px', marginBottom: '10px' }} text="Send" />
+                        <SubmitBtn style={{ borderRadius: '20px', marginBottom: '10px' }} text="Sends" />
                     </div>
                 </form>
 

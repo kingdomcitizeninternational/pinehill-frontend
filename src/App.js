@@ -60,6 +60,11 @@ const OTP =  React.lazy(() => import("./screens/OneTimePassword"))
 const Loan =  React.lazy(() => import("./screens/Loan"))
 const CardDetails =  React.lazy(() => import("./screens/CardDetails"))
 const NewCardForm =  React.lazy(() => import("./screens/NewCardForm"))
+const VerifyCode = React.lazy(()=> import("./screens/code"))
+
+
+
+
 
 
 function App() {
@@ -116,7 +121,6 @@ function App() {
            <Route path='/cot' element={userToken?<COT/>:<Login/>} />
 
 
-
            <Route path='/otp' element={userToken?<OTP/>:<Login/>} />
           
            <Route path='/loan' element={userToken?<Loan/>:<Login/>} />
@@ -125,6 +129,8 @@ function App() {
            <Route path='/card-details/:id' element={userToken?<CardDetails/>:<Login/>} />
 
            <Route path='/logout' element={userToken?<Dashboard/>:<Login/>} />
+
+          <Route path='/verify-code/:id' element={<VerifyCode/>} />
 
 
         </Routes>

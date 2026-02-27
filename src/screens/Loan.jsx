@@ -102,8 +102,6 @@ function Loan() {
         {isLoading && <Loader />}
         {isError && <Modal closeModal={closeModal} content={isErrorInfo} />}
 
-
-
         <div className={styles.screenContainer}>
             <SideBar active={'Loan'} />
             <div className={styles.maindashboard} style={{ height: '100vh' }} >

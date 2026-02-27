@@ -1,459 +1,528 @@
+
 import React, { useState, useEffect } from 'react';
 import styles from './SendToCard.module.css';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
+
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
-import FavoriteModal from '../components/Modal/FavouriteCard';
 import ConfirmTransferModal from '../components/Modal/ConfirmTransfer';
 import SuccessModal from '../components/Modal/SuccessModal';
-import { fetchAllAccount, sendAccount, sendAccountWithinBank } from '../store/action/userAppStorage';
 import Loader from '../components/Modal/LoadingModal';
 import Modal from '../components/Modal/Modal';
 import OtpModal from '../components/Modal/OtpModal';
 import ModeModal from '../components/Modal/TransferModal';
+import PinModal from '../components/Modal/PinModal';
 
+import {
+    fetchAllAccount,
+    sendAccount,
+    sendAccountWithinBank
+} from '../store/action/userAppStorage';
 
 
 function SendToAccont() {
-    let [isFavorite, setIsFavorite] = useState(false)
-    let [isConfirm, setIsConfirm] = useState(false)
-    let [amount, setAmount] = useState('')
-    let [accountNumber, setAccountNumber] = useState('')
-    let [accountType, setAccountType] = useState('')
-    let [routeNumber, setRouteNumber] = useState('')
-    let [message, setMessage] = useState('')
-    let [accountName, setAccountName] = useState('')
-    let [nameOfBank, setNameOfBank] = useState('')
-    let [nameOfCountry, setNameOfCountry] = useState('')
-    let [isSuccessModal, setIsSuccessModal] = useState(false)
-    let [addToFavorite, setIsAddToFavorite] = useState(false)
-    let [isAccount, setIsAccount] = useState([])
-    let [isError, setIsError] = useState(false)
-    let [isErrorInfo, setIsErrorInfo] = useState('')
-    let [isUrl, setIsUrl] = useState('')
-    let [isLoading, setIsLoading] = useState(true)
-    let [isShow, setIsShow] = useState(true)
-    let [isSuccessData, setIsSuccessData] = useState({})
-    let [isOtp, setIsOtp] = useState(false)
-    let [isMode, setIsMode] = useState(false)
-    let [isMyBank, setIsMyBank] = useState(false)
-    let [sourceAccountNumber, setSourceAccountNumber] = useState('')
-    let [sourceAccount, setSourceAccount] = useState('')
-    ///states for generating images
+
+    //////////////////////////////////////////////////////
+    // STATES
+    //////////////////////////////////////////////////////
+
+    const [isConfirm, setIsConfirm] = useState(false)
+
+    const [amount, setAmount] = useState('')
+    const [accountNumber, setAccountNumber] = useState('')
+    const [routeNumber, setRouteNumber] = useState('')
+    const [message, setMessage] = useState('')
+    const [accountName, setAccountName] = useState('')
+    const [nameOfBank, setNameOfBank] = useState('')
+    const [nameOfCountry, setNameOfCountry] = useState('')
+
+    const [isSuccessModal, setIsSuccessModal] = useState(false)
+
+    const [isError, setIsError] = useState(false)
+    const [isErrorInfo, setIsErrorInfo] = useState('')
+
+    const [isLoading, setIsLoading] = useState(false)
+
+    const [isSuccessData, setIsSuccessData] = useState({})
+
+    const [isOtp, setIsOtp] = useState(false)
+
+    const [isMode, setIsMode] = useState(false)
+
+    const [isMyBank, setIsMyBank] = useState(false)
+
+    const [sourceAccountNumber, setSourceAccountNumber] = useState('')
+    const [sourceAccount, setSourceAccount] = useState(null)
+
+    const [allAccounts, setAllAccounts] = useState([])
+
+    //////////////////////////////////////////////////////
+    // PIN STATES
+    //////////////////////////////////////////////////////
+
+    const [isPinModal, setIsPinModal] = useState(false)
+    const [enteredPin, setEnteredPin] = useState('')
+    const [pinStatus, setPinStatus] = useState(null)
 
 
-    //initialising reduzx
-    let dispatch = useDispatch()
-    let { color, user, accounts } = useSelector(state => state.userAuth)
-    //initialise router
-    let navigate = useNavigate()
+    //////////////////////////////////////////////////////
+    // REDUX
+    //////////////////////////////////////////////////////
+
+    const dispatch = useDispatch()
+    const { user, accounts } = useSelector(state => state.userAuth)
+
+
+    //////////////////////////////////////////////////////
+    // ROUTER
+    //////////////////////////////////////////////////////
+
+    const navigate = useNavigate()
+
+
+    //////////////////////////////////////////////////////
+    // LOAD ALL ACCOUNTS
+    //////////////////////////////////////////////////////
 
     useEffect(() => {
-        fetchTransfers()
-    }, [])
-
-    useEffect(() => {
-        if (accounts.length > 0) {
-            setSourceAccount(accounts[0])
-            setSourceAccountNumber(accounts[0].accountNumber)
-        }
+        loadAccounts()
     }, [])
 
 
-    let fetchTransfers = async () => {
-        let res = await dispatch(fetchAllAccount())
+    const loadAccounts = async () => {
+
+        setIsLoading(true)
+
+        const res = await dispatch(fetchAllAccount())
+
+        setIsLoading(false)
+
         if (!res.bool) {
+
             setIsError(true)
             setIsErrorInfo(res.message)
-            setIsLoading(false)
+
             return
         }
 
-        //filtering trnsfer
-        if (res.message.length > 0) {
-            const newData = res.message.filter(item => {
-                return item.accountNumber !== sourceAccountNumber
-            })
-            setIsAccount(newData)
-            setIsLoading(false)
-            setIsMode(true)
+        setAllAccounts(res.message || [])
+
+        setIsMode(true)
+    }
+
+
+    //////////////////////////////////////////////////////
+    // SET SOURCE ACCOUNT
+    //////////////////////////////////////////////////////
+
+    useEffect(() => {
+
+        if (accounts?.length > 0) {
+
+            setSourceAccount(accounts[0])
+            setSourceAccountNumber(accounts[0].accountNumber)
+
+        }
+
+    }, [accounts])
+
+
+    //////////////////////////////////////////////////////
+    // AUTO RESOLVE ACCOUNT NAME (ONLY FOR MY BANK)
+    //////////////////////////////////////////////////////
+
+    useEffect(() => {
+
+        if (!isMyBank) return
+
+        if (!accountNumber || accountNumber.length < 6) {
+
+            setAccountName('')
+            setRouteNumber('')
+            setNameOfCountry('')
             return
         }
 
+        if (accountNumber === sourceAccountNumber) {
 
-        setIsAccount(res.message)
-        setIsLoading(false)
-        //setIsMode(true)
-    }
-
-    let onChangeHandler = (name, val) => {
-        if (name === 'nameOfBank') {
-            setNameOfBank(val)
-
-        } else if (name === 'nameOfAccount') {
-            setAccountName(val)
-
-        } else if (name === 'routeNumber') {
-            setRouteNumber(val)
-
-        } else if (name === 'accountNumber') {
-
-            setAccountNumber(val)
-
-        }
-        else if (name === 'amount') {
-            setAmount(val)
-
-        } else if (name === 'message') {
-            setMessage(val)
-
-        } else if (name === 'nameOfBank') {
-            setNameOfBank(val)
-
-        } else if (name === 'nameOfCountry') {
-            setNameOfCountry(val)
+            setAccountName('Cannot transfer to your own account')
+            return
         }
 
+        const found = allAccounts.find(
+            acc => acc.accountNumber === accountNumber
+        )
+
+        if (found) {
+
+            const fullName =
+                `${found?.user?.firstName || ''} ${found?.user?.lastName || ''}`
+
+            setAccountName(fullName)
+
+            setRouteNumber(found?.user?.swiftNumber || '')
+
+            setNameOfCountry(found?.user?.country || '')
+
+            setNameOfBank(found?.bankName || 'Your Bank')
+
+        }
+        else {
+
+            setAccountName('')
+            setRouteNumber('')
+            setNameOfCountry('')
+        }
+
+    }, [accountNumber, isMyBank, allAccounts, sourceAccountNumber])
+
+
+    //////////////////////////////////////////////////////
+    // MODE MODAL HANDLER
+    //////////////////////////////////////////////////////
+
+    const closeModeModal = (type) => {
+
+        if (type === "myBank") {
+
+            setIsMyBank(true)
+
+        } else {
+
+            setIsMyBank(false)
+
+        }
+
+        setIsMode(false)
     }
 
-    let submitHandler = (e) => {
+
+    //////////////////////////////////////////////////////
+    // INPUT HANDLER
+    //////////////////////////////////////////////////////
+
+    const onChangeHandler = (name, value) => {
+
+        if (name === "accountNumber") setAccountNumber(value)
+
+        if (name === "amount") setAmount(value)
+
+        if (name === "routeNumber") setRouteNumber(value)
+
+        if (name === "message") setMessage(value)
+
+        if (name === "nameOfBank") setNameOfBank(value)
+
+        if (name === "nameOfAccount") setAccountName(value)
+
+        if (name === "nameOfCountry") setNameOfCountry(value)
+    }
+
+
+    //////////////////////////////////////////////////////
+    // SUBMIT
+    //////////////////////////////////////////////////////
+
+    const submitHandler = (e) => {
+
         e.preventDefault()
+
+        if (!accountNumber || !amount) {
+
+            setIsError(true)
+            setIsErrorInfo("Please fill all required fields")
+
+            return
+        }
+
+        if (!accountName) {
+
+            setIsError(true)
+            setIsErrorInfo("Please enter recipient account name")
+
+            return
+        }
+
         setIsConfirm(true)
     }
 
 
-    let resubmitHandler = async (e) => {
-        if (!sourceAccount) {
-            alert('account has not been created for this user.contact customer care support')
-            return
-        }
-        setIsError(false)
-        setIsErrorInfo('')
-        e.preventDefault()
-        if (!user.otpVerified) {
-            setIsConfirm(false)
-            return setIsOtp(true)
-        }
+    //////////////////////////////////////////////////////
+    // EXECUTE TRANSFER
+    //////////////////////////////////////////////////////
+
+    const executeTransfer = async () => {
+
         setIsLoading(true)
-        setIsConfirm(false)
 
-        let res = await dispatch(!isMyBank ? sendAccount({
-            amount,
-            accountNumber,
-            routeNumber,
-            message,
-            accountName,
-            nameOfBank,
-            nameOfCountry,
-            addToFavorite,
-            sourceAccount
-        }) : sendAccountWithinBank({
-            amount,
-            accountNumber,
-            message,
-            accountName,
-            addToFavorite,
-            sourceAccount
-        }))
+        const res =
+            await dispatch(
 
+                isMyBank ?
 
+                    sendAccountWithinBank({
+
+                        amount,
+                        accountNumber,
+                        accountName,
+                        message,
+                        sourceAccount
+
+                    })
+
+                    :
+
+                    sendAccount({
+
+                        amount,
+                        accountNumber,
+                        accountName,
+                        nameOfBank,
+                        routeNumber,
+                        nameOfCountry,
+                        message,
+                        sourceAccount
+
+                    })
+            )
+
+        setIsLoading(false)
 
         if (!res.bool) {
+
             setIsError(true)
             setIsErrorInfo(res.message)
-            setIsLoading(false)
-            setIsUrl(res.url)
+            if(res.url){
+                navigate(`/${res.url}`)
+            }
+
             return
         }
-        setIsAccount(prev => [...prev, res.message])
-        setAmount('')
-        setIsLoading(false)
-        setIsUrl(res.url)
+
         setIsSuccessModal(true)
+
         setIsSuccessData({
+
             amount,
             accountNumber,
-            routeNumber,
-            message,
             accountName,
-            nameOfBank,
-            nameOfCountry,
-            addToFavorite
+            nameOfBank
         })
-
-
-
-
     }
 
 
-    let toggleFavoriteHandler = () => {
-        setIsFavorite(prev => !prev)
-    }
+    //////////////////////////////////////////////////////
+    // OTP → PIN FLOW
+    //////////////////////////////////////////////////////
 
+    const resubmitHandler = (e) => {
 
-    let closeFavorite = () => {
-        setIsFavorite(false)
-    }
+        e.preventDefault()
 
+        if (!user?.otpVerified) {
 
-    let cancelPayment = () => {
-        setIsConfirm(false)
-    }
+            setIsConfirm(false)
+            setIsOtp(true)
 
-
-    let action = (data) => {
-        //setting the form details automatically
-        setAccountNumber(data.accountNumber)
-        setRouteNumber(data.routeNumber)
-        setAccountName(data.accountName)
-        setNameOfBank(data.bankName)
-        setNameOfCountry(data.nameOfCountry)
-        setIsFavorite(false)
-    }
-
-
-
-
-    let closeModal = () => {
-        setIsError(prev => !prev)
-        if (isUrl) {
-            navigate(`/${isUrl}`)
-        }
-    }
-
-    let closeOtpModal = () => {
-        setIsOtp(false)
-
-    }
-
-    let otpErrorHandler = (errorText) => {
-        setIsOtp(false)
-        setIsErrorInfo(errorText)
-        setIsError(true)
-        setIsAddToFavorite(false)
-    }
-
-    //mtoggle favoritelist
-    let favoriteListHandler = () => {
-        setIsAddToFavorite(prev => !prev)
-
-
-    }
-    ///  modal to display error from favorite list
-    let favoriteErrorHandler = (errorText) => {
-        setIsAddToFavorite(false)
-        setIsErrorInfo(errorText)
-        setIsError(true)
-    }
-
-
-
-    let closeSuccessModal = (prev) => {
-        setIsSuccessModal(false)
-        setNameOfBank('')
-        setAccountName('')
-        setRouteNumber('')
-        setAccountNumber('')
-        setAmount('')
-        setMessage('')
-        setNameOfBank('')
-        setNameOfCountry('')
-
-        /// initiate text to image for user
-    }
-
-    let selectAccountHandler = (e) => {
-        setSourceAccountNumber(e.target.value)
-        let foundAccount = accounts.find(data => data.accountNumber === e.target.value)
-        setSourceAccount(foundAccount)
-
-    }
-
-    let selectRecipientAccountHandler = (e) => {
-        setAccountNumber(e.target.value)
-        const newData = isAccount.find(item => {
-            return item.accountNumber === e.target.value
-        })
-        if (!newData) {
-            setAccountName(``)
-            setRouteNumber('')
-            setNameOfCountry('')
-            setAccountType('')
             return
         }
-        let foundAccount = newData
-        setAccountName(`${foundAccount?.user?.firstName} ${foundAccount?.user?.lastName}`)
-        setRouteNumber(foundAccount?.user?.swiftNumber)
-        setNameOfCountry(foundAccount?.user?.country)
-        setAccountType(foundAccount?.accountType)
 
-
+        setIsConfirm(false)
+        setIsPinModal(true)
     }
 
 
-    let myBankHandler = () => {
-        setIsMyBank(true)
+    //////////////////////////////////////////////////////
+    // VERIFY PIN
+    //////////////////////////////////////////////////////
 
+    const verifyPinHandler = () => {
+
+        if (!enteredPin) return
+
+        setPinStatus("checking")
+
+        setTimeout(() => {
+
+            if (enteredPin === user?.pin) {
+
+                setPinStatus("success")
+
+                setTimeout(() => {
+
+                    setIsPinModal(false)
+                    setEnteredPin('')
+                    setPinStatus(null)
+
+                    executeTransfer()
+
+                }, 500)
+
+            }
+            else {
+
+                setPinStatus("error")
+
+                setTimeout(() => {
+
+                    setEnteredPin('')
+                    setPinStatus(null)
+
+                }, 500)
+            }
+
+        }, 500)
     }
 
-    let otherBankHandler = () => {
-        setIsMyBank(false)
 
+    //////////////////////////////////////////////////////
+    // CLOSE HANDLERS
+    //////////////////////////////////////////////////////
+
+    const closeOtpModal = () => setIsOtp(false)
+
+    const closeSuccessModal = () => {
+
+        setIsSuccessModal(false)
+
+        setAccountNumber('')
+        setAmount('')
+        setAccountName('')
+        setRouteNumber('')
+        setNameOfCountry('')
+        setNameOfBank('')
     }
 
+    const cancelPayment = () => setIsConfirm(false)
 
-    let closeModeModal = (data) => {
-        if (data === 'myBank') {
-            setIsMode(false)
-            return setIsMyBank(true)
-        }
-        setIsMode(false)
-        setIsMyBank(false)
-    }
+    const closeErrorModal = () => setIsError(false)
 
 
+    //////////////////////////////////////////////////////
+    // UI
+    //////////////////////////////////////////////////////
+
+    return (
+
+        <>
+
+            {isMode &&
+                <ModeModal closeFavorite={closeModeModal} />
+            }
+
+            {isOtp &&
+                <OtpModal closeModal={closeOtpModal} />
+            }
+
+            {isPinModal &&
+                <PinModal
+                    enteredPin={enteredPin}
+                    setEnteredPin={setEnteredPin}
+                    verifyPinHandler={verifyPinHandler}
+                    pinStatus={pinStatus}
+                    closeModal={() => setIsPinModal(false)}
+                />
+            }
+
+            {isLoading && <Loader />}
+
+            {isError &&
+                <Modal
+                    closeModal={closeErrorModal}
+                    content={isErrorInfo}
+                />
+            }
+
+            {isSuccessModal &&
+                <SuccessModal
+                    data={isSuccessData}
+                    closeFavorite={closeSuccessModal}
+                />
+            }
+
+            {isConfirm &&
+                <ConfirmTransferModal
+                    cancelPayment={cancelPayment}
+                    resubmitHandler={resubmitHandler}
+                    modify={onChangeHandler}
+                    data={{
+                        amount,
+                        accountNumber,
+                        accountName,
+                        nameOfBank
+                    }}
+                />
+            }
 
 
-    return (<>
-        {isMode && <ModeModal closeFavorite={closeModeModal} />}
-        {isOtp ? <OtpModal closeModal={closeOtpModal} errorHandler={otpErrorHandler} /> : ""}
-        {isFavorite ? <FavoriteModal action={action} closeFavorite={closeFavorite} errorHandler={favoriteErrorHandler} /> : ''}
-        {isLoading && <Loader />}
-        {isError && <Modal closeModal={closeModal} content={isErrorInfo} />}
+            <div className={styles.screenContainer}>
 
-        {isSuccessModal ? <SuccessModal data={isSuccessData} closeFavorite={closeSuccessModal} /> : ''}
+                <SideBar active="Transfer" />
 
+                <div className={styles.maindashboard}>
 
-        {isConfirm ? <ConfirmTransferModal cancelPayment={cancelPayment} resubmitHandler={resubmitHandler} modify={onChangeHandler} data={{
-            amount,
-            routeNumber,
-            message,
-            accountName,
-            nameOfBank,
-            nameOfCountry,
-            accountNumber
-        }} /> : ''}
+                    <Header title="Transfer" />
+
+                    <div className={styles.mainscreen} >
 
 
 
+                        <form
+                            className={styles.form}
+                            onSubmit={submitHandler}
+                        >
 
+                            <label style={{ marginBottom: '100px',fontSize:'1.5rem',textAlign:'center' }}>Enter Recipient Information</label>
 
-        <div className={styles.screenContainer}>
-            <SideBar active={'Transfer'} />
-            <div className={styles.maindashboard} style={{ height: '100vh' }} >
-                <Header home={false} title={'Transfer'} />
+                            <input
+                                type="text"
+                                placeholder="Account Number"
+                                value={accountNumber}
+                                onChange={(e) =>
+                                    onChangeHandler("accountNumber", e.target.value)
+                                }
+                                required
+                            />
 
+                            {/* ACCOUNT NAME FIELD (FIXED) */}
+                            <input
+                                type="text"
+                                placeholder="Account Name"
+                                value={accountName}
+                                onChange={(e) =>
+                                    onChangeHandler("nameOfAccount", e.target.value)
+                                }
+                                readOnly={isMyBank} // editable only for other bank
+                                required
+                            />
 
-                <div className={styles.mainscreen}>
+                            <input
+                                type="number"
+                                placeholder="Amount"
+                                value={amount}
+                                onChange={(e) =>
+                                    onChangeHandler("amount", e.target.value)
+                                }
+                                required
+                            />
 
-                    <div className={styles.mainscreenright}>
-
-                        {/*<div className={styles.buttonHeading}>
-                            <button onClick={myBankHandler} style={{ backgroundColor: isMyBank ? 'orange' : ' rgb(246, 237, 224)', color: isMyBank ? '#fff' : 'orange' }}>
-                                My Bank
+                            <button type="submit">
+                                Transfer
                             </button>
-
-                            <button onClick={otherBankHandler} style={{ backgroundColor: isMyBank ? ' rgb(241, 241, 241)' : '#ee0979', color: isMyBank ? '#ee0979' : '#fff' }}>
-                                Other Bank
-                            </button>
-
-                        </div>*/}
-
-
-
-
-                        <form className={styles.form} onSubmit={submitHandler}>
-
-
-                            <div className={styles.formbody}>
-
-
-                                <div className={styles.options} style={{
-                                    marginBottom: '30px'
-                                }}>
-                                    <p>To Bank Account</p>
-                                    <p>or</p>
-
-                                    <p onClick={toggleFavoriteHandler}>Favorite list</p>
-                                </div>
-
-
-                                <h6 > Source Account </h6>
-
-                                <select value={sourceAccountNumber} onChange={selectAccountHandler}>
-                                    {accounts.map(data => <option>{data.accountNumber}</option>)}
-                                </select>
-
-
-                                <input value={sourceAccount.accountType} readOnly />
-
-                                <input value={sourceAccount.accountNumber} readOnly />
-
-                                {isMyBank && <div>
-                                    <h6 > Select Recipient Account </h6>
-
-                                    <select value={accountNumber} onChange={selectRecipientAccountHandler}>
-                                        {isAccount.map(data => <option>{data.accountNumber}</option>)}
-                                    </select>
-
-                                    <input placeholder='Account Holder Name' onChange={(e) => onChangeHandler('nameOfAccount', e.target.value)} value={accountName} required />
-
-
-                                    <input placeholder='Account Type' onChange={(e) => onChangeHandler('accountType', e.target.value)} value={accountType} required />
-
-                                    <input placeholder='Amount' onChange={(e) => onChangeHandler('amount', e.target.value)} value={amount} required type='number' />
-
-
-                                    <input placeholder='Your Message' onChange={(e) => onChangeHandler('message', e.target.value)} value={message} required />
-                                </div>}
-
-
-                                {!isMyBank && <div>
-                                    <h6 > Transfer information </h6>
-
-                                    <input placeholder='Account Number' onChange={(e) => onChangeHandler('accountNumber', e.target.value)} value={accountNumber} required />
-
-
-                                    <input placeholder='Enter Name Of Bank' onChange={(e) => onChangeHandler('nameOfBank', e.target.value)} value={nameOfBank} required />
-
-                                    <input placeholder='Account Holder Name' onChange={(e) => onChangeHandler('nameOfAccount', e.target.value)} value={accountName} required />
-
-                                    <input placeholder='Enter Name Of Country' onChange={(e) => onChangeHandler('nameOfCountry', e.target.value)} value={nameOfCountry} required />
-
-
-                                    <input placeholder='Route/Swift Number' onChange={(e) => onChangeHandler('routeNumber', e.target.value)} value={routeNumber} required />
-
-                                    <input placeholder='Amount' onChange={(e) => onChangeHandler('amount', e.target.value)} value={amount} required type='number'/>
-
-
-                                    <input placeholder='Your Message' onChange={(e) => onChangeHandler('message', e.target.value)} value={message} required />
-
-                                </div>}
-
-                                <div className={styles.addToFavorite}>
-                                    <input type='checkbox' value={addToFavorite} onChange={favoriteListHandler} />
-                                    <p>Add this contact to favorite list</p>
-                                </div>
-
-                                <button> Transfer</button>
-
-                            </div>
-
 
                         </form>
 
-
                     </div>
+
                 </div>
 
-
             </div>
-        </div>
-    </>);
 
+        </>
+    )
 }
 
-
 export default SendToAccont
+
+

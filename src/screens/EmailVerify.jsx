@@ -16,7 +16,7 @@ function EmailVerify() {
     const [isSignout, setIsSignout] = useState(false);
     const [preloader, setPreloader] = useState(true);
 
-    const { id } = useParams();   // ✅ extract param "id" from URL
+    const { id } = useParams();  
     const dispatch = useDispatch();
     const navigate = useNavigate();
 

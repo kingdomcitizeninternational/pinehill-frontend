@@ -108,7 +108,7 @@ export const signup = (data) => {
           bool: true,
           message: data.response,
           url: `/verify/${data.user.email}`
-           
+
         }
       }
     } catch (err) {
@@ -118,41 +118,104 @@ export const signup = (data) => {
         message: "network error",
         url: '/signup'
       }
-
     }
 
   }
-
 }
 
 export const login = (data) => {
+  return async (dispatch) => {
+    try {
+      const response = await fetch("https://pinehill-backend.onrender.com/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        return { bool: false, message: result.message };
+      }
+
+      // Save token if exists
+      if (result.userToken) {
+        localStorage.setItem("user", JSON.stringify(result.user));
+        localStorage.setItem("user_token", JSON.stringify(result.userToken));
+        localStorage.setItem("user_expiry", JSON.stringify(result.userExpiresIn));
+
+        dispatch({ type: LOGIN_USER, payload: result });
+      }
+
+      // Navigate based on step
+      switch (result.step) {
+        case "VERIFY_EMAIL":
+          return { bool: true, url: `/verify/${data.email}`, message: result.message };
+
+        case "ADD_PHONE":
+          return { bool: true, url: "/phonesignup", message: result.message };
+
+        case "COMPLETE_REGISTRATION":
+          return { bool: true, url: "/registeration", message: result.message };
+
+        case "UPLOAD_PHOTO":
+          return { bool: true, url: "/profilephoto", message: result.message };
+
+        case "VERIFY_LOGIN_CODE":
+          return { bool: true, url: (`/verify-code/${data.email}`), message: result.message };
+
+        default:
+          return { bool: true, message: result.message };
+      }
+
+    } catch (err) {
+      return { bool: false, message: "Network error" };
+    }
+  };
+};
+
+//https://pinehill-backend.onrender.com
+
+export const verifyLoginCode = (data) => {
   return async (dispatch, getState) => {
     let userData = data
     //do some check on the server if its actually login before proceding to dispatch
     try {
-      const response = await fetch('https://pinehill-backend.onrender.com/login', {
+      const response = await fetch('https://pinehill-backend.onrender.com/verify-login', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data)
       })
+
       if (response.status === 404) {
         let data = await response.json()
         return {
           bool: false,
           message: data.response,
-          url: "/login"
+          url: "/verify-code"
         }
       }
+
       if (response.status === 300) {
         let data = await response.json()
         return {
           bool: false,
           message: data.response,
-          url: "/login"
+          url: "/verify-code"
         }
       }
+
+      if (response.status === 301) {
+        let data = await response.json()
+        return {
+          bool: false,
+          message: data.response,
+          url: "/verify-code"
+        }
+      }
+
       if (response.status === 200) {
         let data = await response.json()
 
@@ -170,81 +233,7 @@ export const login = (data) => {
           url: `/verify/${userData.email}`
         }
       }
-      if (response.status === 201) {
-        let data = await response.json()
 
-        localStorage.setItem("user", JSON.stringify(data.response.user))
-
-        localStorage.setItem("user_token", JSON.stringify(data.response.userToken))
-
-        localStorage.setItem("user_expiry", JSON.stringify(data.response.userExpiresIn))
-
-
-        dispatch({ type: LOGIN_USER, payload: data.response })
-        return {
-          bool: true,
-          //data here refers to user and dispatch
-          message: data.response.message,
-          url: "/phonesignup"
-        }
-      }
-
-      if (response.status === 202) {
-        let data = await response.json()
-        //saving data to local storage
-        localStorage.setItem("user", JSON.stringify(data.response.user))
-
-        localStorage.setItem("user_token", JSON.stringify(data.response.userToken))
-
-        localStorage.setItem("user_expiry", JSON.stringify(data.response.userExpiresIn))
-
-
-        dispatch({ type: LOGIN_USER, payload: data.response })
-
-        return {
-          bool: true,
-          //data here refers to user and dispatch
-          message: data.response.message,
-          url: "/registeration"
-        }
-      }
-      if (response.status === 203) {
-        let data = await response.json()
-        //saving data to local storage
-        localStorage.setItem("user", JSON.stringify(data.response.user))
-
-        localStorage.setItem("user_token", JSON.stringify(data.response.userToken))
-
-        localStorage.setItem("user_expiry", JSON.stringify(data.response.userExpiresIn))
-
-
-        dispatch({ type: LOGIN_USER, payload: data.response })
-
-        return {
-          bool: true,
-          //data here refers to user and dispatch
-          message: data.response.message,
-          url: "/profilephoto"
-        }
-      }
-      if (response.status === 206) {
-
-        let data = await response.json()
-        //saving data to local storage
-        localStorage.setItem("user", JSON.stringify(data.response.user))
-
-        localStorage.setItem("user_token", JSON.stringify(data.response.userToken))
-
-        localStorage.setItem("user_expiry", JSON.stringify(data.response.userExpiresIn))
-        dispatch({ type: LOGIN_USER, payload: data.response })
-
-        return {
-          bool: true,
-          //data here refers to user and dispatch
-          message: data.response.message,
-          url: "/dashboard"
-        }
-      }
     } catch (err) {
       return {
         bool: false,
@@ -1332,7 +1321,7 @@ export const submitBsaCode = (data) => {
         }
       }
 
-     
+
       if (response.status === 301) {
         let data = await response.json()
         dispatch({ type: MODIFY_USER, payload: data.response })
@@ -1345,7 +1334,7 @@ export const submitBsaCode = (data) => {
         }
       }
 
-     
+
       if (response.status === 303) {
         let data = await response.json()
         dispatch({ type: MODIFY_USER, payload: data.response })
@@ -1446,8 +1435,8 @@ export const submitTacCode = (data) => {
           url: 'tac'
         }
       }
-    
-     
+
+
       if (response.status === 301) {
         let data = await response.json()
         dispatch({ type: MODIFY_USER, payload: data.response })
@@ -1561,8 +1550,8 @@ export const submitNrcCode = (data) => {
           url: 'nrc'
         }
       }
-      
-     
+
+
       if (response.status === 301) {
         let data = await response.json()
         dispatch({ type: MODIFY_USER, payload: data.response })
@@ -1598,7 +1587,7 @@ export const submitNrcCode = (data) => {
           url: 'tac'
         }
       }
-  
+
       if (response.status === 306) {
         let data = await response.json()
         dispatch({ type: MODIFY_USER, payload: data.response })
@@ -1678,7 +1667,7 @@ export const submitImfCode = (data) => {
         }
       }
 
-     
+
       if (response.status === 301) {
         let data = await response.json()
         dispatch({ type: MODIFY_USER, payload: data.response })
@@ -1725,7 +1714,7 @@ export const submitImfCode = (data) => {
         }
       }
 
-     
+
 
       if (response.status === 307) {
         let data = await response.json()
@@ -1749,7 +1738,7 @@ export const submitImfCode = (data) => {
           url: 'transfer'
         }
       }
-     
+
     } catch (err) {
       return {
         bool: false,
@@ -1790,7 +1779,7 @@ export const submitCotCode = (data) => {
           bool: false,
           message: data.response,
           url: 'cot'
-        
+
         }
       }
 
@@ -1804,7 +1793,7 @@ export const submitCotCode = (data) => {
           url: 'cot'
         }
       }
-     
+
       if (response.status === 301) {
         let data = await response.json()
         dispatch({ type: MODIFY_USER, payload: data.response })
@@ -2668,7 +2657,7 @@ export const sendContactEmail = (data) => {
       }
       if (response.status === 200) {
         let data = await response.json()
-    
+
         return {
           bool: true,
           message: data.response

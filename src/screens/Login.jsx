@@ -70,10 +70,13 @@ function LoginPage() {
         }
         setIsLoading(true)
 
+
         let response = await dispatch(login({
             email: userEmail,
             password: userPassword
         }))
+
+        console.log(response)
 
         if (!response.bool) {
             setIsLoading(false)
@@ -99,14 +102,14 @@ function LoginPage() {
     let navigateBackward = () => {
         navigate(-1)
     }
-    
+
     return (<>
         {isError && <Modal content={isErrorInfo} closeModal={closeModal} />}
-{isLoading && <Loader />}
+        {isLoading && <Loader />}
         <div className={styles.screenContainer}>
-        
+
             <div className={styles.rightContainer}>
-             
+
                 <form className={styles.rightformcontainer} onSubmit={submitHandler}>
 
                     <div className={styles.navigate}>
