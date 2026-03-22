@@ -13,9 +13,6 @@ window.Buffer = window.Buffer || require("buffer").Buffer;
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
 
-
-
-
 function RegisterationPage() {
     let [preloader, setPreloader] = useState(true)
     let [isError, setIsError] = useState(false)

@@ -248,7 +248,7 @@ export const verifyLoginCode = (data) => {
 export const checkverification = (email) => {
   return async (dispatch, getState) => {
     //do some check on the server if its actually login before proceding to dispatch
-    //https://PHCU-backend.onrenderxxx.com
+    //https://pinehill-backend.onrender.com
     try {
       const response = await fetch(`https://pinehill-backend.onrender.com/checkverification/${email}`, {
         headers: {
